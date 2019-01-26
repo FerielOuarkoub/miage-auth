@@ -24,14 +24,14 @@ const loginUser = ({ email, password }) =>
   }).then(user =>
     user && !user.deletedAt
       ? Promise.all([
-          omit(
-            user.get({
-              plain: true
-            }),
-            Users.excludeAttributes
-          ),
-          user.comparePassword(password)
-        ])
+        omit(
+          user.get({
+            plain: true
+          }),
+          Users.excludeAttributes
+        ),
+        user.comparePassword(password)
+      ])
       : Promise.reject(new Error('UNKOWN OR DELETED USER'))
   );
 
@@ -43,11 +43,11 @@ const getUser = ({ id }) =>
   }).then(user =>
     user && !user.deletedAt
       ? omit(
-          user.get({
-            plain: true
-          }),
-          Users.excludeAttributes
-        )
+        user.get({
+          plain: true
+        }),
+        Users.excludeAttributes
+      )
       : Promise.reject(new Error('UNKOWN OR DELETED USER'))
   );
 
