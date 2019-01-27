@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jwt-simple');
-const { createUser, loginUser, updateUser } = require('../controller/users');
+const { createUser, loginUser, updateUser, deleteUser } = require('../controller/users');
 const logger = require('../logger');
 
 const apiUsers = express.Router();
@@ -109,6 +109,8 @@ apiUsersProtected.put('/update', (req, res) => {
         message: 'user updated'
       })
       )
+
+
       .catch(err => {
         logger.error(`💥 Failed to update user : ${err.stack}`);
         return res.status(500).send({
@@ -118,4 +120,19 @@ apiUsersProtected.put('/update', (req, res) => {
       })
 });
 
+apiUsersProtected.delete('/delete', (req, res) => {
+  deleteUser(req.user)
+    .then(res.status(200).send({
+      success: true,
+      message: 'user deleted'
+    })
+    )
+    .catch(err => {
+      logger.error(`💥 Failed to delete user : ${err.stack}`);
+      return res.status(500).send({
+        success: false,
+        message: `${err.name} : ${err.message}`
+      });
+    })
+});
 module.exports = { apiUsers, apiUsersProtected };
