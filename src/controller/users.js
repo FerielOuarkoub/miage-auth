@@ -1,5 +1,6 @@
 const omit = require('lodash.omit');
 const { Users } = require('../model');
+const logger = require('../logger');
 
 const createUser = ({ firstName, lastName, email, password }) =>
   Users.create({
@@ -15,6 +16,21 @@ const createUser = ({ firstName, lastName, email, password }) =>
       Users.excludeAttributes
     )
   );
+
+const updateUser = (userId, { firstName, lastName, email, password }) =>
+  Users.update({
+    id: userId,
+    email,
+    firstName: firstName || '',
+    lastName: lastName || '',
+    hash: password
+  }, { where: { id: userId } }).then(user =>
+    omit(
+
+    )
+  ).catch(err => {
+    logger.error(`💥 Failed to update user : ${err.stack}`);
+  });
 
 const loginUser = ({ email, password }) =>
   Users.findOne({
@@ -53,6 +69,7 @@ const getUser = ({ id }) =>
 
 module.exports = {
   createUser,
+  updateUser,
   getUser,
   loginUser
 };
